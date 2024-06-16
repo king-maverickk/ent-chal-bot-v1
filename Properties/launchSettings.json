@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "ent-chal-bot-v1": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "Token": "8b665fc2-585c-4bd3-bd28-44229acfd28e"
+      }
+    }
+  }
+}

@@ -24,7 +24,7 @@ namespace ent_chal_bot_v1.Models
             // Print metadata.
             result += $"Level: {CurrentLevel}\tState: {CurrentState}\tConnection ID: {ConnectionId}\n";
             result += $"Collected: {Collected}\tElapsed Time: {ElapsedTime}\tGame Tick: {GameTick}\n";
-            result += $"Position: ({X}, {Y})\n\n";
+            result += $"Position: ({X}, {Y})\t Radar data: {RadarData}\n\n";
             // Print hero window.
             for (int y = HeroWindow[0].Length - 1; y >= 0; y--)
             {
@@ -33,7 +33,7 @@ namespace ent_chal_bot_v1.Models
                     result += " " + HeroWindow[x][y];
                 }
                 result += "\n";
-            }
+            } // hero window is a 2D array (called jagged array)
             return result;
         }
     }

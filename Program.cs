@@ -68,19 +68,11 @@ namespace ent_chal_bot_v1
             // Print bot state.
             connection.On<BotStateDTO>("ReceiveBotState", (botState) =>
             {
-                Console.WriteLine(botState.ToString());
+                Console.WriteLine(botState.ToString()); // VERY IMPORTANT to get information
+                Console.WriteLine(botState.HeroWindow.GetType()); // System.Int32[][]
                 // Respond with simple command.
-                BotCommand command = new BotCommand() { BotId = BotId };
+                BotCommand command = new BotCommand() { Action = Enums.InputCommand.DOWNRIGHT, BotId = BotId };
                 
-                if (botState.GameTick % 2 == 0)
-                {
-                    command.Action = Enums.InputCommand.DOWN;
-                    Console.WriteLine("BANNNNN");
-                } if (botState.GameTick % 3 == 0)
-                {
-                    Console.WriteLine("HELLO");
-                    command.Action = Enums.InputCommand.RIGHT;
-                }
                 connection.InvokeAsync("SendPlayerCommand", command).Wait();
             });
 

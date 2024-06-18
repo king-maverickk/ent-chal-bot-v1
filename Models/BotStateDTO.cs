@@ -34,6 +34,8 @@ namespace ent_chal_bot_v1.Models
                 }
                 result += "\n";
             } // hero window is a 2D array (called jagged array)
+            // the outer arrays are the y coords. the inner arrays are x coords
+            // ...remember line int[][] HeroWindow
             return result;
         }
 

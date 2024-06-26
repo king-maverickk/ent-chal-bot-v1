@@ -72,20 +72,8 @@ namespace ent_chal_bot_v1
             connection.On<BotStateDTO>("ReceiveBotState", (botState) =>
             {
                 Console.WriteLine(botState.ToString()); // VERY IMPORTANT to get information
-                Console.WriteLine(botState.HeroWindow.GetType()); // System.Int32[][]
 
-                // If there are commands in the queue, send the next one
-                if (commandQueue.Count > 0)
-                {
-                    InputCommand nextCommand = commandQueue.Dequeue();
-                    BotCommand command = new BotCommand() { Action = nextCommand, BotId = BotId };
-                    connection.InvokeAsync("SendPlayerCommand", command).Wait();
-                }
-
-                // Respond with simple command.
-                // BotCommand command = new BotCommand() { Action = Enums.InputCommand.DOWN, BotId = BotId };
-                
-                //connection.InvokeAsync("SendPlayerCommand", command).Wait();
+                EncircleTiles(10, botState, connection); // Example: Encircle 10 tiles
             });
 
             // Register bot.
@@ -102,7 +90,71 @@ namespace ent_chal_bot_v1
 
 
         }
-        private static void MovementCommandQueue()
+        public static void MoveBot(InputCommand direction, Guid botId, HubConnection connection)
+        {
+            BotCommand command = new BotCommand() { Action = direction, BotId = botId };
+            connection.InvokeAsync("SendPlayerCommand", command).Wait();
+        }
+        private static void EncircleTiles(int n, BotStateDTO botState, HubConnection connection)
+        {
+            int startX = botState.X;
+            int startY = botState.Y;
+
+            // Calculate the side length of the square to encircle at least n tiles
+            int sideLength = (int)Math.Ceiling(Math.Sqrt(n));
+
+            // If the side length is odd, adjust it to be even
+            if (sideLength % 2 != 0)
+            {
+                sideLength++;
+            }
+
+            // Calculate half of the side length
+            int halfSide = sideLength / 2;
+
+            // Store the path to encircle and return to start point
+            List<InputCommand> path = new List<InputCommand>();
+
+            // Move UP to create the upper boundary
+            for (int i = 0; i < halfSide; i++)
+            {
+                path.Add(InputCommand.UP);
+            }
+
+            // Move RIGHT to create the right boundary
+            for (int i = 0; i < sideLength; i++)
+            {
+                path.Add(InputCommand.RIGHT);
+            }
+
+            // Move DOWN to create the bottom boundary
+            for (int i = 0; i < sideLength; i++)
+            {
+                path.Add(InputCommand.DOWN);
+            }
+
+            // Move LEFT to create the left boundary
+            for (int i = 0; i < sideLength; i++)
+            {
+                path.Add(InputCommand.LEFT);
+            }
+
+            // Move UP to return to the starting row
+            for (int i = 0; i < halfSide; i++)
+            {
+                path.Add(InputCommand.UP);
+            }
+
+            // Execute the path to encircle the tiles and return to the start point
+            foreach (var command in path)
+            {
+                MoveBot(command, BotId, connection);
+            }
+            path.Add(InputCommand.RIGHT);
+            path.Add(InputCommand.RIGHT);
+        }
+        
+            private static void MovementCommandQueue()
         {
             commandQueue.Enqueue(Enums.InputCommand.DOWN);
             commandQueue.Enqueue(Enums.InputCommand.DOWN);

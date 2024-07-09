@@ -70,6 +70,7 @@ namespace ent_chal_bot_v1.Bots
         {
             int score = 0;
             score += scoreUnclaimedArea(direction);
+            score -= scoreDistanceToEnemyTerritory(direction);
             return score;
         }
 
@@ -137,6 +138,82 @@ namespace ent_chal_bot_v1.Bots
                     }
                     break;
             }
+            return score;
+        }
+
+        // this needs tweaking because I have a feeling it may avoid territories that are far but come closer to territories that are close
+        public int scoreDistanceToEnemyTerritory(InputCommand direction)
+        {
+            int score = 0;
+            int[][] view = _botState.HeroWindow;
+
+            int centerRow = 4;
+            int centerCol = 4;
+
+            switch (direction)
+            {
+                case InputCommand.LEFT:
+                    for (int col = centerCol - 1; col >= 0; col--)
+                    {
+                        if (view[centerRow][col] == (int)CellType.Bot1Territory || 
+                            view[centerRow][col] == (int)CellType.Bot2Territory ||
+                            view[centerRow][col] == (int)CellType.Bot3Territory) 
+                        {
+                            score -= 2;
+                        }
+                        else
+                        {
+                            break; // stop if the land is not territory
+                        }
+                    }
+                    break;
+                case InputCommand.RIGHT:
+                    for (int col = centerCol + 1; col < view[centerRow].Length; col++)
+                    {
+                        if (view[centerRow][col] == (int)CellType.Bot1Territory ||
+                            view[centerRow][col] == (int)CellType.Bot2Territory ||
+                            view[centerRow][col] == (int)CellType.Bot3Territory) 
+                        {
+                            score -= 2;
+                        }
+                        else
+                        {
+                            break; // stop if the land is not territory
+                        }
+                    }
+                    break;
+                case InputCommand.DOWN:
+                    for (int row = centerRow + 1; row < view.Length; row++)
+                    {
+                        if (view[row][centerCol] == (int)CellType.Bot1Territory ||
+                            view[row][centerCol] == (int)CellType.Bot2Territory ||
+                            view[row][centerCol] == (int)CellType.Bot3Territory)
+                        {
+                            score -= 2;
+                        }
+                        else
+                        {
+                            break; // stop if the land is not territory
+                        }
+                    }
+                    break;
+                case InputCommand.UP:
+                    for (int row = centerRow - 1; row >= 0; row--)
+                    {
+                        if (view[row][centerCol] == (int)CellType.Bot1Territory ||
+                            view[row][centerCol] == (int)CellType.Bot2Territory ||
+                            view[row][centerCol] == (int)CellType.Bot3Territory)
+                        {
+                            score -= 2;
+                        }
+                        else
+                        {
+                            break; // stop if the land is not territory
+                        }
+                    }
+                    break;
+            }
+
             return score;
         }
     }

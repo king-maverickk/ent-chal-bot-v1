@@ -63,14 +63,81 @@ namespace ent_chal_bot_v1.Bots
 
             // Check if the new position contains the bot's trail
             // 4 is the cell type for Bot0's trail. Change as needed
-            if (_botState.HeroWindow[newX][newY] == 4)
+            return _botState.HeroWindow[newX][newY] == 4;
+        }
+
+        public int scoreDirection(InputCommand direction)
+        {
+            int score = 0;
+            score += scoreUnclaimedArea(direction);
+            return score;
+        }
+
+        // check the land adjacent - in a straight line - to the bot
+        public int scoreUnclaimedArea(InputCommand direction)
+        {
+            int score = 0;
+            int[][] view = _botState.HeroWindow;
+
+            int centerRow = 4;
+            int centerCol = 4;
+
+            switch (direction)
             {
-                return true;
-            } 
-            else
-            {
-                return false;
+                case InputCommand.LEFT:
+                    for (int col = centerCol - 1; col >= 0; col--)
+                    {
+                        if (view[centerRow][col] == 0) // 255 represents unclaimed land
+                        {
+                            score+= 2;
+                        }
+                        else
+                        {
+                            break; // Stop if we hit a claimed land
+                        }
+                    }
+                    break;
+                case InputCommand.RIGHT:
+                    for (int col = centerCol + 1; col < view[centerRow].Length; col++)
+                    {
+                        if (view[centerRow][col] == 255) // 255 represents unclaimed land
+                        {
+                            score += 2;
+                        }
+                        else
+                        {
+                            break; // Stop if we hit a claimed land
+                        }
+                    }
+                    break;
+                case InputCommand.DOWN:
+                    for (int row = centerRow + 1; row < view.Length; row++)
+                    {
+                        if (view[row][centerCol] == 255) // 255 represents unclaimed land
+                        {
+                            score += 2;
+                        }
+                        else
+                        {
+                            break; // Stop if we hit a claimed land
+                        }
+                    }
+                    break;
+                case InputCommand.UP:
+                    for (int row = centerRow - 1; row >= 0; row--)
+                    {
+                        if (view[row][centerCol] == 255) // 255 represents unclaimed land
+                        {
+                            score += 2;
+                        }
+                        else
+                        {
+                            break; // Stop if we hit a claimed land
+                        }
+                    }
+                    break;
             }
+            return score;
         }
     }
 }

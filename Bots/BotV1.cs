@@ -87,7 +87,7 @@ namespace ent_chal_bot_v1.Bots
                 case InputCommand.LEFT:
                     for (int col = centerCol - 1; col >= 0; col--)
                     {
-                        if (view[centerRow][col] == 0) // 255 represents unclaimed land
+                        if (view[centerRow][col] == (int)CellType.Unclaimed)
                         {
                             score+= 2;
                         }
@@ -100,7 +100,7 @@ namespace ent_chal_bot_v1.Bots
                 case InputCommand.RIGHT:
                     for (int col = centerCol + 1; col < view[centerRow].Length; col++)
                     {
-                        if (view[centerRow][col] == 255) // 255 represents unclaimed land
+                        if (view[centerRow][col] == (int)CellType.Unclaimed)
                         {
                             score += 2;
                         }
@@ -113,7 +113,7 @@ namespace ent_chal_bot_v1.Bots
                 case InputCommand.DOWN:
                     for (int row = centerRow + 1; row < view.Length; row++)
                     {
-                        if (view[row][centerCol] == 255) // 255 represents unclaimed land
+                        if (view[row][centerCol] == (int)CellType.Unclaimed)
                         {
                             score += 2;
                         }
@@ -126,7 +126,7 @@ namespace ent_chal_bot_v1.Bots
                 case InputCommand.UP:
                     for (int row = centerRow - 1; row >= 0; row--)
                     {
-                        if (view[row][centerCol] == 255) // 255 represents unclaimed land
+                        if (view[row][centerCol] == (int)CellType.Unclaimed)
                         {
                             score += 2;
                         }

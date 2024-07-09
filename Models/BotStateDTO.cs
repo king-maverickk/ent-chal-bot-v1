@@ -26,7 +26,7 @@ namespace ent_chal_bot_v1.Models
             result += $"Collected: {Collected}\tElapsed Time: {ElapsedTime}\tGame Tick: {GameTick}\n";
             result += $"Position: ({X}, {Y})\n\n";
             // Print hero window.
-            for (int y = HeroWindow[0].Length - 1; y >= 0; y--)
+            for (int y = 0; y < HeroWindow[0].Length; y++)
             {
                 for (int x = 0; x < HeroWindow.Length; x++)
                 {
@@ -34,10 +34,11 @@ namespace ent_chal_bot_v1.Models
                 }
                 result += "\n";
             } // hero window is a 2D array (called jagged array)
-            // the outer arrays are the y coords. the inner arrays are x coords
-            // ...remember line int[][] HeroWindow
+              // the outer arrays are the y coords. the inner arrays are x coords
+              // ...remember line int[][] HeroWindow
             return result;
         }
+
 
         // Cell types
         enum CellTypes

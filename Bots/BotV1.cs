@@ -18,6 +18,19 @@ namespace ent_chal_bot_v1.Bots
             _connection = connection;
         }
 
+        public void adaptiveEncircle(int targetArea)
+        {
+            int currentArea = 0;
+            InputCommand direction = InputCommand.LEFT;
+            while (currentArea < targetArea)
+            {
+                if (canSafelyMove(direction))
+                {
+
+                }
+            }
+        }
+
         // check if bot is within the grid bounds
         public List<(int, int)> getCellTypes(CellType cellType)
         {
@@ -92,6 +105,11 @@ namespace ent_chal_bot_v1.Bots
             {
                 return InputCommand.DOWN;
             }
+        }
+        
+        public bool canSafelyMove(InputCommand direction)
+        {
+            return IsWithinBounds(direction) && WillHitOwnTrail(direction);
         }
 
         public bool IsWithinBounds(InputCommand direction)
@@ -300,6 +318,14 @@ namespace ent_chal_bot_v1.Bots
             }
 
             return score;
+        }
+
+        public Queue<InputCommand> ReturnToTerritoryQueue()
+        {
+            Queue<InputCommand> commands = new Queue<InputCommand>();
+            (int x, int y) spawnPoint
+
+            return commands;
         }
     }
 }

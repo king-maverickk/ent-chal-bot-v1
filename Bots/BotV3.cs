@@ -43,5 +43,17 @@ namespace ent_chal_bot_v1.Bots
 
             return randomPath;
         }
+
+        public void calculateAquired()
+        {
+            // could use track record of x and y
+            // then make those as vertices .
+            // the furtherest edges
+            // BFS flood fill? because the paths are gonna be bad.. crashing into its self, etc. 
+
+            // make a list of x and y movements.
+            // take list and compare the values like most_left_corner > coord (refine this <<<<)
+            // BFS flood fill
+        }
     }
 }

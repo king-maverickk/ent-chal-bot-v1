@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using ent_chal_bot_v1.Enums;
 using ent_chal_bot_v1.Bots;
+using ent_chal_bot_v1.Services;
 
 namespace ent_chal_bot_v1
 {
@@ -20,7 +21,7 @@ namespace ent_chal_bot_v1
         private static void Main(string[] args)
         {
             // function is below
-            printStuff();
+            // printStuff();
 
             // Setup configuration builder with appsettings.json
             var builder = new ConfigurationBuilder()
@@ -74,6 +75,10 @@ namespace ent_chal_bot_v1
                 BotId = id;
             });
 
+            // Using to process stuff
+            BotService botService = new();
+
+
             // Print bot state.
             connection.On<BotStateDTO>("ReceiveBotState", (botState) =>
             {
@@ -107,7 +112,7 @@ namespace ent_chal_bot_v1
             Console.WriteLine("");
             Console.WriteLine("");
             List<int> randomPath = _botV3.randomPath(12, 1);
-            _botV3.printStuff(randomPath);        
+            _botV3.printStuff(randomPath);
         }
     }
 }

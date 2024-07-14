@@ -4,7 +4,8 @@ using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
-using ent_chal_bot_v1.Enums; // for using Queue
+using ent_chal_bot_v1.Enums;
+using ent_chal_bot_v1.Bots;
 
 namespace ent_chal_bot_v1
 {
@@ -15,8 +16,12 @@ namespace ent_chal_bot_v1
         private static Queue<InputCommand> commandQueue = new Queue<InputCommand>();
 
         private static BotStateDTO _botState;
+        private static BotV3 _botV3 = new BotV3();
         private static void Main(string[] args)
         {
+            // function is below
+            printStuff();
+
             // Setup configuration builder with appsettings.json
             var builder = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", optional: false);
@@ -82,7 +87,7 @@ namespace ent_chal_bot_v1
             // Loop while connected.
             while (connection.State == HubConnectionState.Connected || connection.State == HubConnectionState.Connecting || connection.State == HubConnectionState.Reconnecting)
             {
-                // use while to make moves, assess situtation etc.
+                // use while-loop to make moves, assess situtation etc.
                 if (_botState != null)
                 {
                     MoveBot(InputCommand.RIGHT, BotId, connection);
@@ -94,6 +99,15 @@ namespace ent_chal_bot_v1
         {
             BotCommand command = new BotCommand() { Action = direction, BotId = botId };
             connection.InvokeAsync("SendPlayerCommand", command).Wait();
+        }
+
+        public static void printStuff()
+        {
+            Console.WriteLine("=======RANDOM PATH===========");
+            Console.WriteLine("");
+            Console.WriteLine("");
+            List<int> randomPath = _botV3.randomPath(12, 1);
+            _botV3.printStuff(randomPath);        
         }
     }
 }

@@ -323,7 +323,7 @@ namespace ent_chal_bot_v1.Bots
         public Queue<InputCommand> ReturnToTerritoryQueue()
         {
             Queue<InputCommand> commands = new Queue<InputCommand>();
-            (int x, int y) spawnPoint
+            (int x, int y) spawnPoint;
 
             return commands;
         }

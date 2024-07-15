@@ -3,16 +3,18 @@
 namespace ent_chal_bot_v1.Models
 {
     public class BotStateDTO {
-        public int CurrentLevel { get; set; }
-        public string CurrentState { get; set; }
-        public string ConnectionId { get; set; }
-        public int Collected { get; set; }
-        public string ElapsedTime { get; set; }
+        public int DirectionState { get; set; }
+        public required string ElapsedTime { get; set; }
         public int GameTick { get; set; }
-        public int[][] HeroWindow { get; set; }
+        public int PowerUp { get; set; }
+        public int SuperPowerUp { get; set; }
+        public required Dictionary<Guid, int> LeaderBoard { get; set; }
+        public required Location[] BotPostions { get; set; }
+        public required PowerUpLocation[] PowerUpLocations { get; set; }
+        public required bool[][] Weeds { get; set; }
+        public required int[][] HeroWindow { get; set; }
         public int X { get; set; }
         public int Y { get; set; }
-        public int[][] RadarData { get; set; }
         public override string ToString() {
             // Early return if we don't have a window.
             if (HeroWindow == null || HeroWindow[0] == null)
@@ -22,9 +24,8 @@ namespace ent_chal_bot_v1.Models
             String result = "";
 
             // Print metadata.
-            result += $"Level: {CurrentLevel}\tState: {CurrentState}\tConnection ID: {ConnectionId}\n";
-            result += $"Collected: {Collected}\tElapsed Time: {ElapsedTime}\tGame Tick: {GameTick}\n";
-            result += $"Position: ({X}, {Y})\n\n";
+            result += $"Elapsed Time: {ElapsedTime}\tGame Tick: {GameTick}\n";
+            result += $"Position: ({X}, {Y})\t DirectionState: {(InputCommand)DirectionState}\n\n";
             // Print hero window.
             for (int y = 0; y < HeroWindow[0].Length; y++)
             {
@@ -55,4 +56,15 @@ namespace ent_chal_bot_v1.Models
             Unclaimed = 255,
         }
     }
+    public struct PowerUpLocation
+    {
+        public Location Location { get; set; }
+        public int Type { get; set; }
+    }
+    public struct Location
+    {
+        public int X { get; set; }
+        public int Y { get; set; }
+    }
+
 }

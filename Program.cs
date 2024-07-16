@@ -95,7 +95,9 @@ namespace ent_chal_bot_v1
                 // use while-loop to make moves, assess situtation etc.
                 if (_botState != null)
                 {
-                    MoveBot(InputCommand.RIGHT, BotId, connection);
+                    EncircleTiles(200, _botState, connection); // Example: Encircle 10 tiles
+                    _botV3.recordPosition(_botState);
+                    _botV3.calculateAquired();
                 }
                 Thread.Sleep(300);
             }
@@ -113,6 +115,66 @@ namespace ent_chal_bot_v1
             Console.WriteLine("");
             List<int> randomPath = _botV3.randomPath(12, 1);
             _botV3.printStuff(randomPath);
+        }
+
+        private static void EncircleTiles(int n, BotStateDTO botState, HubConnection connection)
+        {
+            int startX = botState.X;
+            int startY = botState.Y;
+
+            // Calculate the side length of the square to encircle at least n tiles
+            int sideLength = (int)Math.Ceiling(Math.Sqrt(n));
+
+            // If the side length is odd, adjust it to be even
+            if (sideLength % 2 != 0)
+            {
+                sideLength++;
+            }
+
+            // Calculate half of the side length
+            int halfSide = sideLength / 2;
+
+            // Store the path to encircle and return to start point
+            List<InputCommand> path = new List<InputCommand>();
+
+            // Move UP to create the upper boundary
+            for (int i = 0; i < halfSide; i++)
+            {
+                path.Add(InputCommand.UP);
+            }
+
+
+            // Move LEFT to create the left boundary
+            for (int i = 0; i < sideLength; i++)
+            {
+                path.Add(InputCommand.LEFT);
+            }
+
+            // Move DOWN to create the bottom boundary
+            for (int i = 0; i < sideLength; i++)
+            {
+                path.Add(InputCommand.DOWN);
+            }
+
+            // Move RIGHT to create the right boundary
+            for (int i = 0; i < sideLength; i++)
+            {
+                path.Add(InputCommand.RIGHT);
+            }
+
+            
+
+            // Move UP to return to the starting row
+            for (int i = 0; i < halfSide; i++)
+            {
+                path.Add(InputCommand.UP);
+            }
+
+            // Execute the path to encircle the tiles and return to the start point
+            foreach (var command in path)
+            {
+                MoveBot(command, BotId, connection);
+            }
         }
     }
 }

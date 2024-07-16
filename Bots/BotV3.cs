@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ent_chal_bot_v1.Models;
 
 namespace ent_chal_bot_v1.Bots
 {
@@ -46,66 +47,47 @@ namespace ent_chal_bot_v1.Bots
 
 
         private List<(int, int)> paths = new List<(int, int)>();
-        public void recordPathVertex(int x, int y)
+        private double acquiredArea; // new area
+        public void recordPosition(BotStateDTO _botState)
         {
+            int x = _botState.X;
+            int y = _botState.Y;
             paths.Add((x, y));
-        }
 
-        public List<(int, int)> cornerVertices(List<(int, int)> pathValues)
-        {
-            (int top_left_cornerX, int top_left_cornerY) = (0, 0);
-            (int top_right_cornerX, int top_right_cornerY) = (0, 0);
-            (int bottom_left_cornerX, int bottom_left_cornerY) = (0, 0);
-            (int bottom_right_cornerX, int bottom_right_cornerY) = (0, 0);
-
-            foreach (var pathValue in pathValues)
+            if (isOnTerritory(_botState))
             {
-                if (pathValue.Item1 < top_left_cornerX && pathValue.Item2 < top_left_cornerY)
-                {
-                    top_left_cornerX = pathValue.Item1;
-                    top_left_cornerY = pathValue.Item2;
-                }
-                else if (pathValue.Item1 > top_right_cornerX && pathValue.Item2 < top_right_cornerY)
-                {
-                    top_right_cornerX = pathValue.Item1;
-                    top_right_cornerY = pathValue.Item2;
-                }
-                else if (pathValue.Item1 < bottom_left_cornerX && pathValue.Item2 > bottom_left_cornerY)
-                {
-                    bottom_left_cornerX = pathValue.Item1;
-                    bottom_left_cornerY = pathValue.Item2;
-                }
-                else if (pathValue.Item1 > bottom_right_cornerX && pathValue.Item2 > bottom_right_cornerY)
-                {
-                    bottom_right_cornerX = pathValue.Item1;
-                    bottom_right_cornerY = pathValue.Item2;
-                }
+                calculateAquired();
+                
             }
-
-            List<(int, int)> cornerVerticesList = new List<(int, int)>()
-            {
-                (top_left_cornerX, top_left_cornerY),
-                (top_right_cornerX, top_right_cornerY),
-                (bottom_left_cornerX, bottom_left_cornerY),
-                (bottom_right_cornerX, bottom_right_cornerY)
-            };
-
-            return cornerVerticesList;
         }
 
+        public bool isOnTerritory(BotStateDTO _botState)
+        {
+            return _botState.HeroWindow[5][5] == 0;
+        }
 
+        public double calculateArea(List<(int, int)> pathValues) // shoelace method/function to calculate area.
+        {
+            int n = pathValues.Count;
+            if (n < 3) return 0; // not a polygon
+
+            double area = 0;
+            for (int i = 0; i < n; i++)
+            {
+                int x1 = pathValues[i].Item1, y1 = pathValues[i].Item2;
+                int x2 = pathValues[(i + 1) % n].Item1, y2 = pathValues[(i + 1) % n].Item2;
+
+                area += (x1 * y2 - x2 * y1);
+            }
+            area = Math.Abs(area) / 2.0;
+            return area;
+        }
 
         public void calculateAquired()
         {
-
-            // could use track record of x and y
-            // then make those as vertices .
-            // the furtherest edges
-            // BFS flood fill? because the paths are gonna be bad.. crashing into its self, etc. 
-
-            // make a list of x and y movements.
-            // take list and compare the values like most_left_corner > coord (<<<< REFINED)
-            // BFS flood fill
+            double area = calculateArea(paths);
+            acquiredArea += area;
+            Console.WriteLine($"Enclosed Area: {area} units");
         }
     }
 }

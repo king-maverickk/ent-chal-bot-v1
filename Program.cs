@@ -78,13 +78,15 @@ namespace ent_chal_bot_v1
             // Using to process stuff
             BotService botService = new();
 
-
             // Print bot state.
             connection.On<BotStateDTO>("ReceiveBotState", (botState) =>
             {
                 Console.WriteLine(botState.ToString()); // VERY IMPORTANT to get information
                 _botState = botState; // get the state and update it
             });
+
+            BotV1 _botV1 = new BotV1(_botState, connection);
+            BotRecorder botRecorder = new BotRecorder();
 
             // Register bot.
             connection.InvokeAsync("Register", token, botNickname).Wait();
@@ -95,14 +97,28 @@ namespace ent_chal_bot_v1
                 // use while-loop to make moves, assess situtation etc.
                 if (_botState != null)
                 {
-                    EncircleTiles(200, _botState, connection); // Example: Encircle 10 tiles
+                    // EncircleTiles(200, _botState, connection); // Example: Encircle 10 tiles
                     _botV3.recordPosition(_botState);
                     _botV3.calculateAquired();
+                    _botV1.updateState(_botState);
+                    var move = _botV1.AdaptiveEncircle(400);
+                    if (botRecorder.changeDirection())
+                    {
+                        Console.WriteLine("CHANGE DIRECTION");
+                    }
+                    MoveBot(move, BotId, connection);
+                    botRecorder.recordPosition(_botState);
                 }
                 Thread.Sleep(300);
             }
         }
         public static void MoveBot(InputCommand direction, Guid botId, HubConnection connection)
+        {
+            BotCommand command = new BotCommand() { Action = direction, BotId = botId };
+            connection.InvokeAsync("SendPlayerCommand", command).Wait();
+        }
+
+        public static void MoveRandom(InputCommand direction, Guid botId, HubConnection connection, List<int> randomPath, BotStateDTO botStateLocal)
         {
             BotCommand command = new BotCommand() { Action = direction, BotId = botId };
             connection.InvokeAsync("SendPlayerCommand", command).Wait();

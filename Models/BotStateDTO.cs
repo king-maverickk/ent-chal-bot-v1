@@ -25,7 +25,7 @@ namespace ent_chal_bot_v1.Models
 
             // Print metadata.
             result += $"Elapsed Time: {ElapsedTime}\tGame Tick: {GameTick}\n";
-            result += $"Position: ({X}, {Y})\t DirectionState: {(InputCommand)DirectionState}\n\n";
+            result += $"Position: ({X}, {Y})\t DirectionState: {(InputCommand)DirectionState}\n";
             // Print hero window.
             for (int y = 0; y < HeroWindow[0].Length; y++)
             {
@@ -37,6 +37,18 @@ namespace ent_chal_bot_v1.Models
             } // hero window is a 2D array (called jagged array)
               // the outer arrays are the y coords. the inner arrays are x coords
               // ...remember line int[][] HeroWindow
+
+            result += "Weeds: \n";
+            // Print the weeds status.
+            for (int y = 0; y < Weeds[0].Length; y++)
+            {
+                for (int x = 0; x < Weeds.Length; x++)
+                {
+                    result += " " + Weeds[x][y];
+                }
+                result += "\n";
+            }
+
             return result;
         }
 

@@ -25,7 +25,7 @@ namespace ent_chal_bot_v1.Models
 
             // Print metadata.
             result += $"Elapsed Time: {ElapsedTime}\tGame Tick: {GameTick}\n";
-            result += $"Position: ({X}, {Y})\t DirectionState: {(InputCommand)DirectionState}\n";
+            result += $"Position: ({X}, {Y})\tDirectionState: {(InputCommand)DirectionState}\n";
             // Print hero window.
             for (int y = 0; y < HeroWindow[0].Length; y++)
             {
@@ -48,6 +48,41 @@ namespace ent_chal_bot_v1.Models
                 }
                 result += "\n";
             }
+
+            result += "Power Up Locations:\n";
+            foreach (var powerUp in PowerUpLocations)
+            {
+                String type;
+                switch (powerUp.Type)
+                {
+                    case 1:
+                        type = "TerritoryImmunity";
+                        break;
+                    case 2:
+                        type = "Unprunable";
+                        break;
+                    case 3:
+                        type = "Freeze";
+                        break;
+                    default:
+                        type = powerUp.Type.ToString(); // returns the int of the powerup 
+                        break;
+                }
+
+                result += $"({powerUp.Location.X}, {powerUp.Location.Y}) - Type: {type}\t PowerUp Int: {powerUp.Type}\n";
+            }
+
+            // Print power ups.
+            result += $"Power Up: {PowerUp}\n";
+            result += $"Super Power Up: {SuperPowerUp}\n";
+            /*
+             * SAME AS X, Y above
+            result += "Bot Positions:\n";
+            foreach (var pos in BotPostions)
+            {
+                result += $"({pos.X}, {pos.Y})\n";
+            }
+            */
 
             return result;
         }
